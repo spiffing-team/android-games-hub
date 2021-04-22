@@ -11,9 +11,8 @@ public class StateManager : MonoBehaviour
     
     void Awake()
     {
-        _introManager.EndOfIntro += HideIntro;
-        _mainUiManager.HideUi += HideMainMenu;
-        ShowIntro();
+        _introManager.OnEnd += HideIntro;
+      //  ShowIntro();
     }
 
     #region Intro
@@ -25,7 +24,6 @@ public class StateManager : MonoBehaviour
     
     private void HideIntro()
     {
-        _introManager.gameObject.SetActive(false);
         ShowMainMenu();
     }
 
@@ -36,11 +34,6 @@ public class StateManager : MonoBehaviour
     private void ShowMainMenu()
     {
         _mainUiManager.Show();
-    }
-
-    private void HideMainMenu()
-    {
-        _mainUiManager.gameObject.SetActive(false);
     }
     
 

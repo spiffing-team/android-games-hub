@@ -1,19 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class IntroManager :  MonoBehaviour
+public class IntroManager :  MonoBehaviour, IView
 {
     private AudioSource audio;
     [SerializeField] private TextMeshProUGUI intro;
     [SerializeField] private GameObject mainUI;
     
-    
-    public delegate void EventHandler();
-    public event EventHandler EndOfIntro;
+    public event EventHandler OnEnd;
 
     public void Show()
     {
@@ -21,8 +16,9 @@ public class IntroManager :  MonoBehaviour
         audio = transform.GetComponent<AudioSource>();
         PlayIntro();
     }
+    
 
-    internal void PlayIntro()
+    private void PlayIntro()
     {
         intro.text = "Arkanoid";
         
@@ -40,6 +36,12 @@ public class IntroManager :  MonoBehaviour
         sequence.Append(intro.DOFade(1.0f, 1f));
         sequence.AppendInterval(3f);
         sequence.Append(intro.DOFade(0.0f, 1f));
-        sequence.AppendCallback(()=> EndOfIntro?.Invoke());
+        sequence.AppendCallback(Hide);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+        OnEnd?.Invoke();
     }
 }

@@ -1,11 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainUIManager : MonoBehaviour
+public class MainUIManager : MonoBehaviour, IView
 {
-    public delegate void EventHandler();
-    public event EventHandler HideUi;
+    public event EventHandler OnEnd;
         
     public  void Show()
     {
@@ -13,7 +13,9 @@ public class MainUIManager : MonoBehaviour
     }
 
     public void Hide()
-    {
-        HideUi?.Invoke();
+    {    
+        gameObject.SetActive(false);
+        OnEnd?.Invoke();
     }
+
 }
