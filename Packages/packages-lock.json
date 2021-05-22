@@ -55,6 +55,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.2d.tilemap": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,
@@ -135,6 +141,16 @@
     },
     "com.unity.toolchain.linux-x86_64": {
       "version": "0.1.18-preview",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot": "0.1.19-preview",
+        "com.unity.sysroot.linux-x86_64": "0.1.14-preview"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.toolchain.win-x86_64-linux-x86_64": {
+      "version": "0.1.20-preview",
       "depth": 0,
       "source": "registry",
       "dependencies": {
