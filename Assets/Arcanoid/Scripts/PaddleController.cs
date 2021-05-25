@@ -8,6 +8,7 @@ public class PaddleController : MonoBehaviour
 {
     // Start is called before the first frame update
     public int player=0;
+
     void Start()
     {
         
@@ -26,7 +27,6 @@ public class PaddleController : MonoBehaviour
         {
             if (Input.touchCount > 0 || Input.GetMouseButton(0))
             {
-            
                 var pos = Camera.current.ScreenToWorldPoint(Input.mousePosition).x;;
                 Debug.Log("MYSZKa");
                 //Touch touch = Input.GetTouch(0);
@@ -55,10 +55,28 @@ public class PaddleController : MonoBehaviour
     }
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log(other.gameObject.name);
-        BlockGenerator.instance.ActivateBlock();
-        other.transform.GetComponent<Rigidbody>().velocity = new Vector3(0,10,0);
-        Debug.Log(other.transform.GetComponent<Rigidbody>().velocity) ;
+        if (other.transform.CompareTag("Ball"))
+        {
+            var moveDir = other.transform.GetComponent<Ball>().move;
+
+            if (other.contacts[0].point.x < transform.position.x)
+            {
+                moveDir.x = 1;
+            }
+            else
+            {
+                moveDir.x = -1;
+            }
+
+            moveDir *= -1;
+        
+            other.transform.GetComponent<Ball>().move = moveDir;
+
+            BlockGenerator.instance.ActivateBlock();
+            BlockGenerator.instance.ActivateBlock();
+
+        }
+       
         
     }
 }

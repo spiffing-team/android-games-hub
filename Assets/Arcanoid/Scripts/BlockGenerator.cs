@@ -16,6 +16,8 @@ public class BlockGenerator : MonoBehaviour
 
     public int startBlocks = 0;
 
+
+
     private void Awake()
     {
         if (instance == null)
@@ -37,6 +39,8 @@ public class BlockGenerator : MonoBehaviour
             {
                var element =  Instantiate( block, position, Quaternion.identity, transform);
                position += Vector3.right *0.8f;
+               element.SetType(Random.Range(0,1));
+               
                
                grid.Add(element);
                activeGrid.Add(element);
@@ -52,8 +56,6 @@ public class BlockGenerator : MonoBehaviour
     private void RemoveExtraBlocks()
     {
         var x = grid.Count;
-        Debug.Log("FOR ZROBI TYLE OKRAZEN" +  x);
-
         for (int i = 0; i < x - startBlocks; i++)
         {
             var id = Random.Range(0, activeGrid.Count);
@@ -66,6 +68,14 @@ public class BlockGenerator : MonoBehaviour
        deactiveGrid.Add(block);
        activeGrid.Remove(block);
        block.gameObject.SetActive(false);
+    }
+    
+    public void RemoveBlockFromActive()
+    {
+        Block x = activeGrid[Random.Range(0, activeGrid.Count)];
+        deactiveGrid.Add(x);
+        activeGrid.Remove(x);
+        x.gameObject.SetActive(false);
     }
 
     public void ActivateBlock()
