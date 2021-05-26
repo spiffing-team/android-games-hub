@@ -4,7 +4,11 @@ using UnityEngine;
 
 enum ImageMap
 {
-    Bird
+    Bird,
+    Apple,
+    Car,
+    Dog,
+    Ship
 }
 
 public class NonogramMain : MonoBehaviour
@@ -14,6 +18,10 @@ public class NonogramMain : MonoBehaviour
     public GameObject TilesCountTextPrefab;
 
     public TextAsset BirdImageMap;
+    public TextAsset AppleImageMap;
+    public TextAsset CarImageMap;
+    public TextAsset DogImageMap;
+    public TextAsset ShipImageMap;
 
     private float canvasSize;
     /// <summary>
@@ -29,7 +37,7 @@ public class NonogramMain : MonoBehaviour
     void Start()
     {
         this.updateCanvasSize();
-        this.selectImageMap(ImageMap.Bird);
+        this.selectImageMap();
         this.instatiateGrid();
     }
 
@@ -124,6 +132,7 @@ public class NonogramMain : MonoBehaviour
             size * 0.5f,
             -1
         );
+
         // instantiate the tiles counters
         for (int y = 0; y < map.GetLength(0); y++)
         {
@@ -134,13 +143,38 @@ public class NonogramMain : MonoBehaviour
             );
             var textObj = prefab.GetComponentInChildren<TilesCountText>();
             // calc
-            var val = 0;
+            var vals = new List<int>();
+            vals.Add(0);
+            var index = 0;
             for (int x = 0; x < map.GetLength(1); x++)
             {
-                if (map[y, x]) { val++; }
+                if (map[y, x])
+                {
+                    vals[index]++;
+                }
+                else if (vals[index] != 0)
+                {
+                    vals.Add(0);
+                    index++;
+                }
             }
-            textObj.SetText(val.ToString());
-            textObj.SetSize(0.4f * this.canvasSize);
+            var output = "";
+            foreach (var val in vals)
+            {
+                if (val != 0)
+                    output += val.ToString();
+            }
+            textObj.SetText(output);
+            var textSize = 0.4f * this.canvasSize;
+            if (output.Length > 1)
+            {
+                var modifier = output.Length * 0.75f;
+                textObj.SetSize(textSize * (1f / modifier));
+            }
+            else
+            {
+                textObj.SetSize(textSize);
+            }
         }
         origin += new Vector3(cellSize, 0, 0);
         for (int x = 0; x < map.GetLength(1); x++)
@@ -152,13 +186,39 @@ public class NonogramMain : MonoBehaviour
             );
             var textObj = prefab.GetComponentInChildren<TilesCountText>();
             // calc
-            var val = 0;
-            for (int y = 0; y < map.GetLength(0); y++)
+            var vals = new List<int>();
+            vals.Add(0);
+            var index = 0;
+            for (int y = 0; y < map.GetLength(1); y++)
             {
-                if (map[y, x]) { val++; }
+                if (map[y, x])
+                {
+                    vals[index]++;
+                }
+                else if (vals[index] != 0)
+                {
+                    vals.Add(0);
+                    index++;
+                }
             }
-            textObj.SetText(val.ToString());
-            textObj.SetSize(0.4f * this.canvasSize);
+            var output = "";
+            foreach (var val in vals)
+            {
+                if (val != 0)
+                    output += val.ToString() + " ";
+            }
+            output = output.Trim();
+            textObj.SetText(output);
+            var textSize = 0.4f * this.canvasSize;
+            if (output.Length > 1)
+            {
+                var modifier = output.Length * 0.75f;
+                textObj.SetSize(textSize * (1f / modifier));
+            }
+            else
+            {
+                textObj.SetSize(textSize);
+            }
         }
     }
 
@@ -238,14 +298,34 @@ public class NonogramMain : MonoBehaviour
         return sum == 0;
     }
 
-    private void selectImageMap(ImageMap mapName)
+    private void selectImageMap(ImageMap? mapName = null)
     {
+        if (mapName == null)
+        {
+            // choose at random
+            var values = ImageMap.GetValues(typeof(ImageMap));
+            mapName = (ImageMap)values.GetValue(Random.Range(0, values.Length));
+        }
         bool[,] output = null;
         string raw = null;
+        // map enum values to text assets
+        // (yes, I know)
         switch (mapName)
         {
             case ImageMap.Bird:
                 raw = this.BirdImageMap.text;
+                break;
+            case ImageMap.Apple:
+                raw = this.AppleImageMap.text;
+                break;
+            case ImageMap.Car:
+                raw = this.CarImageMap.text;
+                break;
+            case ImageMap.Dog:
+                raw = this.DogImageMap.text;
+                break;
+            case ImageMap.Ship:
+                raw = this.DogImageMap.text;
                 break;
         }
 

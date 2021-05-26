@@ -234,8 +234,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Canvas: {fileID: 101972838}
   NonoblockPrefab: {fileID: 8606002641800006926, guid: 127661489b7edfd6cb211cef41fd1ff6, type: 3}
-  TilesCountTextPrefab: {fileID: 0}
+  TilesCountTextPrefab: {fileID: 7563369588299401967, guid: 7c30a785a5d16c523bf58d0e5fefa734, type: 3}
   BirdImageMap: {fileID: 4900000, guid: de1aaa3e81c83bba19d3ac76b8195455, type: 3}
+  AppleImageMap: {fileID: 4900000, guid: 592ab75f15755ac5fa2c68ab7429c159, type: 3}
+  CarImageMap: {fileID: 4900000, guid: 97366c45d7b0c3e0bba6f211bfbfb268, type: 3}
+  DogImageMap: {fileID: 4900000, guid: 6c78231d5aaafce1e8c718d16af4e89a, type: 3}
+  ShipImageMap: {fileID: 4900000, guid: 7f01c719da23819ec8de14c09e6e0567, type: 3}
 --- !u!1 &526920256
 GameObject:
   m_ObjectHideFlags: 0
