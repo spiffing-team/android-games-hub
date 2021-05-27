@@ -127,18 +127,46 @@ public class NonogramMain : MonoBehaviour
             }
         }
 
+        // instantiate the tiles counters
+        // vertical ones
         origin = new Vector3(
             size * -0.5f,
             size * 0.5f,
             -1
         );
+        this.instantiateTilesCounters(
+            0, // outer loop: rows
+            1, // inner loop: columns
+            map,
+            origin,
+            (int i) => new Vector3(0, -i * cellSize - 0.75f * cellSize, 0) // move vertically
+        );
+        // horizontal ones
+        origin += new Vector3(1.05f * cellSize, 0, 0);
+        this.instantiateTilesCounters(
+            1, // outer loop: columns
+            0, // inner loop: rows
+            map,
+            origin,
+            (int i) => new Vector3(i * cellSize - 0.25f * cellSize, 0, 0) // move horizontally
+        );
+    }
 
-        // instantiate the tiles counters
-        for (int y = 0; y < map.GetLength(0); y++)
+    // instantiating a row/column of tile counters
+    private delegate Vector3 OriginOffset(int i);
+    private void instantiateTilesCounters(
+        int outerRow,
+        int innerRow,
+        bool[,] map,
+        Vector3 origin,
+        OriginOffset originOffset
+    )
+    {
+        for (int i = 0; i < map.GetLength(outerRow); i++)
         {
             var prefab = Instantiate(
                 this.TilesCountTextPrefab,
-                origin + new Vector3(0, -y * cellSize - 0.75f * cellSize, 0),
+                origin + originOffset(i),
                 Quaternion.identity
             );
             var textObj = prefab.GetComponentInChildren<TilesCountText>();
@@ -146,9 +174,10 @@ public class NonogramMain : MonoBehaviour
             var vals = new List<int>();
             vals.Add(0);
             var index = 0;
-            for (int x = 0; x < map.GetLength(1); x++)
+            for (int j = 0; j < map.GetLength(innerRow); j++)
             {
-                if (map[y, x])
+                var t = outerRow < innerRow ? map[i, j] : map[j, i];
+                if (t)
                 {
                     vals[index]++;
                 }
@@ -161,58 +190,15 @@ public class NonogramMain : MonoBehaviour
             var output = "";
             foreach (var val in vals)
             {
-                if (val != 0)
+                if (val != 0 || output == "")
                     output += val.ToString();
-            }
-            textObj.SetText(output);
-            var textSize = 0.4f * this.canvasSize;
-            if (output.Length > 1)
-            {
-                var modifier = output.Length * 0.75f;
-                textObj.SetSize(textSize * (1f / modifier));
-            }
-            else
-            {
-                textObj.SetSize(textSize);
-            }
-        }
-        origin += new Vector3(cellSize, 0, 0);
-        for (int x = 0; x < map.GetLength(1); x++)
-        {
-            var prefab = Instantiate(
-                this.TilesCountTextPrefab,
-                origin + new Vector3(x * cellSize - 0.25f * cellSize, 0, 0),
-                Quaternion.identity
-            );
-            var textObj = prefab.GetComponentInChildren<TilesCountText>();
-            // calc
-            var vals = new List<int>();
-            vals.Add(0);
-            var index = 0;
-            for (int y = 0; y < map.GetLength(1); y++)
-            {
-                if (map[y, x])
-                {
-                    vals[index]++;
-                }
-                else if (vals[index] != 0)
-                {
-                    vals.Add(0);
-                    index++;
-                }
-            }
-            var output = "";
-            foreach (var val in vals)
-            {
-                if (val != 0)
-                    output += val.ToString() + " ";
             }
             output = output.Trim();
             textObj.SetText(output);
             var textSize = 0.4f * this.canvasSize;
             if (output.Length > 1)
             {
-                var modifier = output.Length * 0.75f;
+                var modifier = output.Length * 0.55f;
                 textObj.SetSize(textSize * (1f / modifier));
             }
             else
