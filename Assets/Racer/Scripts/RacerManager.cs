@@ -2,17 +2,28 @@ using UnityEngine;
 
 namespace Racer
 {
-    public class RacerManager : MonoBehaviour
+    public class RacerManager : GameBehaviour
     {
+        private ScreenOrientation previousScreenOrientation;
+
         void Start()
         {
+            previousScreenOrientation = Screen.orientation;
             Screen.orientation = ScreenOrientation.Portrait;
             SetCorrectCameraSize();
         }
 
-        public void Close()
+        protected override void OnGoBack()
         {
-            Screen.orientation = ScreenOrientation.AutoRotation;
+            Screen.orientation = previousScreenOrientation;
+            base.OnGoBack();
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            var points = PointsDatabase.Load(PointsDatabase.Field.Racer);
+            PointsDatabase.Save(PointsDatabase.Field.Racer, points + 1);
         }
 
         private void SetCorrectCameraSize()
