@@ -263,6 +263,8 @@ public class NonogramMain : MonoBehaviour
         this.selectedImageMap[y, x] = !this.selectedImageMap[y, x];
         cube.ToggleSelected();
 
+        cube.AnimateClick(Vector3.one * this.canvasSize * 0.08f);
+
         if (this.checkIfWon())
         {
             Debug.Log("you’ve won!");

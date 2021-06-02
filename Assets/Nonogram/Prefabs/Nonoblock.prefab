@@ -110,7 +110,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
+  state: 0
   cube: {fileID: 1395156619064691859}
+  clickAnimationPrefab: {fileID: 4988735046735192681, guid: 0e38f4d1f913c40399d38639857601bd, type: 3}
   StandardMaterial: {fileID: 2100000, guid: 9d84ed3aedbf2bd41b71c4914db38938, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 05eaef4c1233c82e19984fcc8474fbf8, type: 2}
 --- !u!1 &8606002641800006926

@@ -10,6 +10,7 @@ public class Nonoblock : MonoBehaviour
     public bool state = false;
 
     public GameObject cube;
+    public GameObject clickAnimationPrefab;
 
     public Material StandardMaterial;
     public Material SelectedMaterial;
@@ -28,8 +29,10 @@ public class Nonoblock : MonoBehaviour
 
     }
 
-    private void requireMeshRenderer() {
-        if(this.meshRenderer == null) {
+    private void requireMeshRenderer()
+    {
+        if (this.meshRenderer == null)
+        {
             this.meshRenderer = this.cube.GetComponent<MeshRenderer>();
         }
     }
@@ -49,8 +52,20 @@ public class Nonoblock : MonoBehaviour
         this.changeMaterial(this.state ? this.SelectedMaterial : this.StandardMaterial);
     }
 
-    public void identify()
+    public void AnimateClick(Vector3? scale = null)
     {
-        Debug.Log(this.x + " " + this.y + " ");
+        if (scale == null)
+        {
+            scale = new Vector3(1, 1, 1);
+        }
+        var obj = Instantiate(
+            this.clickAnimationPrefab,
+            this.cube.transform.position + new Vector3(0, 0, -1),
+            Quaternion.identity
+        );
+        obj.transform.localScale = (Vector3)scale;
+
+        var animator = obj.GetComponent<Animator>();
+        animator.Play("ClickAnimation");
     }
 }
