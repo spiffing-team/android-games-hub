@@ -11,7 +11,7 @@ enum ImageMap
     Ship
 }
 
-public class NonogramMain : MonoBehaviour
+public class NonogramMain : GameBehaviour
 {
     public GameObject Canvas;
     public GameObject NonoblockPrefab;
@@ -42,8 +42,9 @@ public class NonogramMain : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         this.checkOnClick();
     }
 
