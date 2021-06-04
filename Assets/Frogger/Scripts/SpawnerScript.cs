@@ -22,11 +22,11 @@ public class SpawnerScript : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if( ShouldSpawn() )
         {
-            Spawn();
-        }
+           // Spawn();
+        }*/
     }
 
     private void Spawn()

@@ -8,10 +8,16 @@ public class move : MonoBehaviour
 
     public float moveSpeed = 5f;
     public float hopLength = 1f;
+
+    [SerializeField]
+    private int cols;
     // Start is called before the first frame update
     void Start()
     {
         camPos = GameObject.Find("Main Camera").GetComponent<Transform>();
+        // Spawn the player and center the camera on them.
+        transform.position = new Vector3(cols/2f + .5f, 0.5f, 0);
+        camPos.position = transform.position + new Vector3(0, 0, -1);
     }
 
     // Update is called once per frame
