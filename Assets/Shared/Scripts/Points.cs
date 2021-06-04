@@ -25,6 +25,10 @@ public static class PointsDatabase
         PlayerPrefs.Save();
     }
 
+    public static void SaveAdditively(Field field, int value) {
+        Save(field, Load(field) + value);
+    }
+
     public static int Load(Field field)
     {
         return PlayerPrefs.GetInt(field.ToString());
