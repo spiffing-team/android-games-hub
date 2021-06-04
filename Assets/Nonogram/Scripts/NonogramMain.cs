@@ -16,6 +16,7 @@ public class NonogramMain : GameBehaviour
     public GameObject Canvas;
     public GameObject NonoblockPrefab;
     public GameObject TilesCountTextPrefab;
+    public GameObject EndGameTextPrefab;
 
     public TextAsset BirdImageMap;
     public TextAsset AppleImageMap;
@@ -32,6 +33,11 @@ public class NonogramMain : GameBehaviour
     private float canvasOriginalSize = 10;
 
     private bool[,] selectedImageMap;
+
+    private List<GameObject> textObjects = new List<GameObject>();
+
+    private int score = 0;
+    private bool alreadyWon = false;
 
     // Start is called before the first frame update
     void Start()
@@ -170,6 +176,7 @@ public class NonogramMain : GameBehaviour
                 origin + originOffset(i),
                 Quaternion.identity
             );
+            this.textObjects.Add(prefab);
             var textObj = prefab.GetComponentInChildren<TilesCountText>();
             // calc
             var vals = new List<int>();
@@ -206,6 +213,14 @@ public class NonogramMain : GameBehaviour
             {
                 textObj.SetSize(textSize);
             }
+        }
+    }
+
+    private void removeTextObjects()
+    {
+        foreach (var obj in this.textObjects)
+        {
+            Destroy(obj);
         }
     }
 
@@ -266,9 +281,11 @@ public class NonogramMain : GameBehaviour
 
         cube.AnimateClick(Vector3.one * this.canvasSize * 0.08f);
 
-        if (this.checkIfWon())
+        if (this.checkIfWon() && !this.alreadyWon)
         {
+            this.alreadyWon = true;
             Debug.Log("you’ve won!");
+            this.handleWin();
         }
 
     }
@@ -285,6 +302,29 @@ public class NonogramMain : GameBehaviour
             }
         }
         return sum == 0;
+    }
+
+    private void handleWin()
+    {
+        // remove now unnecessary tiles counters
+        this.removeTextObjects();
+        // hide the grid behind the canvas
+        this.Canvas.transform.position += new Vector3(0, 0, -2);
+        // instantiate the game over text
+        var textObj = Instantiate(
+            this.EndGameTextPrefab,
+            new Vector3(0, 0, -3),
+            Quaternion.identity
+        );
+        this.score += 100;
+
+        // display the score
+        var text = textObj.GetComponentInChildren<TilesCountText>();
+        text.SetText("You’ve won\nwith a score of:\n" + this.score);
+        text.SetSize(this.canvasSize * 0.5f);
+
+        // save the score
+        PointsDatabase.SaveAdditively(PointsDatabase.Field.Nonogram, this.score);
     }
 
     private void selectImageMap(ImageMap? mapName = null)
