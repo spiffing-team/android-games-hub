@@ -1,15 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-enum ImageMap
-{
-    Bird,
-    Apple,
-    Car,
-    Dog,
-    Ship
-}
+using System.Linq;
 
 public class NonogramMain : GameBehaviour
 {
@@ -18,11 +10,8 @@ public class NonogramMain : GameBehaviour
     public GameObject TilesCountTextPrefab;
     public GameObject EndGameTextPrefab;
 
-    public TextAsset BirdImageMap;
-    public TextAsset AppleImageMap;
-    public TextAsset CarImageMap;
-    public TextAsset DogImageMap;
-    public TextAsset ShipImageMap;
+    private TextAsset[] imageMaps;
+    private Texture2D[] imageMapsImgs;
 
     private float canvasSize;
     /// <summary>
@@ -43,6 +32,7 @@ public class NonogramMain : GameBehaviour
     void Start()
     {
         this.updateCanvasSize();
+        this.loadImageMaps();
         this.selectImageMap();
         this.instatiateGrid();
     }
@@ -52,6 +42,12 @@ public class NonogramMain : GameBehaviour
     {
         base.Update();
         this.checkOnClick();
+    }
+
+    private void loadImageMaps()
+    {
+        this.imageMapsImgs = Resources.LoadAll("Nonogram/ImageMaps", typeof(Texture2D)).Cast<Texture2D>().ToArray();
+        this.imageMaps = Resources.LoadAll("Nonogram/ImageMaps", typeof(TextAsset)).Cast<TextAsset>().ToArray();
     }
 
     private void requireCanvas()
@@ -327,39 +323,23 @@ public class NonogramMain : GameBehaviour
         PointsDatabase.SaveAdditively(PointsDatabase.Field.Nonogram, this.score);
     }
 
-    private void selectImageMap(ImageMap? mapName = null)
+    private void selectImageMap(string mapName = null)
     {
+        bool[,] output = null;
+        TextAsset asset = null;
+
         if (mapName == null)
         {
             // choose at random
-            var values = ImageMap.GetValues(typeof(ImageMap));
-            mapName = (ImageMap)values.GetValue(Random.Range(0, values.Length));
-        }
-        bool[,] output = null;
-        string raw = null;
-        // map enum values to text assets
-        // (yes, I know)
-        switch (mapName)
-        {
-            case ImageMap.Bird:
-                raw = this.BirdImageMap.text;
-                break;
-            case ImageMap.Apple:
-                raw = this.AppleImageMap.text;
-                break;
-            case ImageMap.Car:
-                raw = this.CarImageMap.text;
-                break;
-            case ImageMap.Dog:
-                raw = this.DogImageMap.text;
-                break;
-            case ImageMap.Ship:
-                raw = this.DogImageMap.text;
-                break;
+            asset = this.imageMaps[Random.Range(0, this.imageMaps.Length)];
+        } else {
+            asset = this.imageMaps.Where((TextAsset ta) => ta.name == mapName).First();
         }
 
-        if (raw != null)
+        if (asset != null)
         {
+            var raw = asset.text;
+
             var rows = raw.Split('\n');
             var size = rows.Length - 1; // do not include the last empty line
             output = new bool[size, size];
