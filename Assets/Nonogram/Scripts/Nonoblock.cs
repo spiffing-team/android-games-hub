@@ -68,4 +68,8 @@ public class Nonoblock : MonoBehaviour
         var animator = obj.GetComponent<Animator>();
         animator.Play("ClickAnimation");
     }
+
+    public void SetCubeSize(float scale) {
+        this.cube.transform.localScale = Vector3.one * scale;
+    }
 }

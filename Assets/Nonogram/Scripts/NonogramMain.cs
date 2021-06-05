@@ -9,9 +9,11 @@ public class NonogramMain : GameBehaviour
     public GameObject NonoblockPrefab;
     public GameObject TilesCountTextPrefab;
     public GameObject EndGameTextPrefab;
+    public GameObject EndGameImage;
 
     private TextAsset[] imageMaps;
-    private Texture2D[] imageMapsImgs;
+    private Sprite[] imageMapsImgs;
+    private int chosenImageMap;
 
     private float canvasSize;
     /// <summary>
@@ -22,8 +24,10 @@ public class NonogramMain : GameBehaviour
     private float canvasOriginalSize = 10;
 
     private bool[,] selectedImageMap;
+    private bool[,] selectedImageMapOriginal;
 
     private List<GameObject> textObjects = new List<GameObject>();
+    private List<GameObject> tiles = new List<GameObject>();
 
     private int score = 0;
     private bool alreadyWon = false;
@@ -46,7 +50,7 @@ public class NonogramMain : GameBehaviour
 
     private void loadImageMaps()
     {
-        this.imageMapsImgs = Resources.LoadAll("Nonogram/ImageMaps", typeof(Texture2D)).Cast<Texture2D>().ToArray();
+        this.imageMapsImgs = Resources.LoadAll("Nonogram/ImageMaps", typeof(Sprite)).Cast<Sprite>().ToArray();
         this.imageMaps = Resources.LoadAll("Nonogram/ImageMaps", typeof(TextAsset)).Cast<TextAsset>().ToArray();
     }
 
@@ -121,6 +125,7 @@ public class NonogramMain : GameBehaviour
                     origin + new Vector3(x * cellSize + 0.5f * cellSize, -y * cellSize - 0.5f * cellSize, 0),
                     Quaternion.identity
                 );
+                this.tiles.Add(obj);
                 var tmp = cellSize * 0.9f;
                 obj.transform.localScale = new Vector3(tmp, tmp, tmp);
                 // save
@@ -277,6 +282,20 @@ public class NonogramMain : GameBehaviour
 
         cube.AnimateClick(Vector3.one * this.canvasSize * 0.08f);
 
+        var scale = 1f;
+        if (this.cellsLeft() < 3)
+        {
+            scale = 0.9f;
+        }
+        foreach (var tile in this.tiles)
+        {
+            var t = tile.GetComponentInChildren<Nonoblock>();
+            if (this.selectedImageMapOriginal[t.y, t.x])
+            {
+                t.SetCubeSize(scale);
+            }
+        }
+
         if (this.checkIfWon() && !this.alreadyWon)
         {
             this.alreadyWon = true;
@@ -286,7 +305,7 @@ public class NonogramMain : GameBehaviour
 
     }
 
-    private bool checkIfWon()
+    private int cellsLeft()
     {
         int sum = 0;
         var map = this.selectedImageMap;
@@ -297,7 +316,12 @@ public class NonogramMain : GameBehaviour
                 if (map[y, x]) { sum++; }
             }
         }
-        return sum == 0;
+        return sum;
+    }
+
+    private bool checkIfWon()
+    {
+        return this.cellsLeft() == 0;
     }
 
     private void handleWin()
@@ -321,6 +345,11 @@ public class NonogramMain : GameBehaviour
 
         // save the score
         PointsDatabase.SaveAdditively(PointsDatabase.Field.Nonogram, this.score);
+
+        // play the ending animation
+        var endAnimation = this.EndGameImage.GetComponent<Animator>();
+        endAnimation.Play("EndGameImage");
+        Destroy(this.EndGameImage, endAnimation.runtimeAnimatorController.animationClips[0].length);
     }
 
     private void selectImageMap(string mapName = null)
@@ -332,7 +361,9 @@ public class NonogramMain : GameBehaviour
         {
             // choose at random
             asset = this.imageMaps[Random.Range(0, this.imageMaps.Length)];
-        } else {
+        }
+        else
+        {
             asset = this.imageMaps.Where((TextAsset ta) => ta.name == mapName).First();
         }
 
@@ -354,5 +385,11 @@ public class NonogramMain : GameBehaviour
             }
         }
         this.selectedImageMap = output;
+        this.selectedImageMapOriginal = (bool[,])output.Clone();
+
+        this.chosenImageMap = System.Array.IndexOf(this.imageMaps, asset);
+
+        var sprite = this.EndGameImage.GetComponent<SpriteRenderer>();
+        sprite.sprite = this.imageMapsImgs[this.chosenImageMap];
     }
 }
