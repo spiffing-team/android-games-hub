@@ -29,6 +29,7 @@ public class move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Legacy code.
         Vector3 hop = new Vector3(0f, 0f, 0f);
         if (Input.GetKeyDown("w"))
         {
