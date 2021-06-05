@@ -25,11 +25,14 @@ public class GridManager : MonoBehaviour
 
     private void GenerateGrid()
     {
+        // Generate the grid and tilemap game objects.
         var grid = new GameObject("Grid").AddComponent<Grid>();
-
         var tilemap = new GameObject("Tilemap").AddComponent<Tilemap>();
         tilemap.gameObject.AddComponent<TilemapRenderer>();
         tilemap.transform.SetParent(grid.transform);
+        // Ensure the map fits the camera view: it should have 10 columns, so adjust the tile size appropriately.
+        var cellWidth = Screen.width / cols;
+        grid.GetComponent<Transform>().localScale = new Vector3(cellWidth, cellWidth, 1);
 
         TileBase t;
         for(int row=0; row<rows; row++)

@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class move : MonoBehaviour
 {
+    [SerializeField]
+    private int cols = 10;
     public Transform camPos;
 
     public float moveSpeed = 5f;
     public float hopLength = 1f;
 
-    [SerializeField]
-    private int cols;
+
     // Start is called before the first frame update
     void Start()
     {
         camPos = GameObject.Find("Main Camera").GetComponent<Transform>();
         // Spawn the player and center the camera on them.
-        transform.position = new Vector3(cols/2f + .5f, 0.5f, 0);
-        camPos.position = transform.position + new Vector3(0, 0, -1);
+        var cellWidth = Screen.width / cols;
+        hopLength = cellWidth;
+        transform.position = new Vector3(Screen.width/2f + cellWidth * .5f, cellWidth * .5f, -0.5f);
+        transform.localScale = new Vector3(cellWidth * 0.15f, cellWidth * 0.15f, 1);
+
+        camPos.position = transform.position + new Vector3(-cellWidth * .5f, 0, -1);
+        GameObject.Find("Main Camera").GetComponent<Camera>().orthographicSize = Screen.width/3f;
     }
 
     // Update is called once per frame
