@@ -29,6 +29,6 @@ public class TilesCountText : MonoBehaviour
     }
 
     public void SetSize(float size) {
-        this.gameObject.transform.localScale = new Vector3(size, size, size);
+        this.gameObject.transform.localScale = new Vector3(size, size, size) * 0.14f;
     }
 }
