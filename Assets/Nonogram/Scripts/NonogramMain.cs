@@ -15,6 +15,8 @@ public class NonogramMain : GameBehaviour
     public int ScorePerRound;
     public int BonusPoints;
 
+    private ScreenOrientation previousScreenOrientation;
+
     private TextAsset[] imageMaps;
     private Sprite[] imageMapsImgs;
     private int chosenImageMap;
@@ -40,10 +42,18 @@ public class NonogramMain : GameBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        previousScreenOrientation = Screen.orientation;
+        Screen.orientation = ScreenOrientation.Portrait;
         this.updateCanvasSize();
         this.loadImageMaps();
         this.selectImageMap();
         this.instatiateGrid();
+    }
+
+    protected override void OnGoBack()
+    {
+        Screen.orientation = previousScreenOrientation;
+        base.OnGoBack();
     }
 
     // Update is called once per frame
@@ -357,7 +367,9 @@ public class NonogramMain : GameBehaviour
         {
             score += this.BonusPoints;
             t += score + "\n(You’ve found\n" + this.BonusPoints + " bonus points!)";
-        } else {
+        }
+        else
+        {
             t += score;
         }
         text.SetText(t);
