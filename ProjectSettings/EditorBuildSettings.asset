@@ -8,4 +8,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Hub.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Tap Race.unity
+    guid: 41da5e25dd176ee4d8065900fe1911aa
+  - enabled: 1
+    path: Assets/Scenes/Arcanoid.unity
+    guid: 69054b3d821970a4e9c06e76e8a78976
+  - enabled: 1
+    path: Assets/Scenes/Cross  Road.unity
+    guid: f892f02423dc70e4794b1cb9ddb3a06a
+  - enabled: 1
+    path: Assets/Scenes/Nonogram.unity
+    guid: f8a6e4a7d5bf9f84d8ebd8cde5e99bd2
   m_configObjects: {}
