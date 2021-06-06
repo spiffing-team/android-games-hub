@@ -12,4 +12,9 @@ public class SceneManager : MonoBehaviour
     {
         LoadScene(0);
     }
+
+    public static void RestartScene()
+    {
+        LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
 }

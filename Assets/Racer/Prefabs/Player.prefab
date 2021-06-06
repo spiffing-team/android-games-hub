@@ -94,6 +94,8 @@ GameObject:
   - component: {fileID: 4065478348842873624}
   - component: {fileID: 4065478348842873625}
   - component: {fileID: 4065478348842873630}
+  - component: {fileID: 3783358446230566894}
+  - component: {fileID: 2229932076506704324}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -200,8 +202,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e850efa4c77c17544877b5c107a03bc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
   inputMaxAngle: 40
   playerMaxAngle: 30
-  sideSpeed: 5
+  sideSpeed: 7
   roadWidth: 4
+  useGyro: 0
+--- !u!70 &3783358446230566894
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065478348842873631}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.95, y: 1.94}
+  m_Direction: 0
+--- !u!70 &2229932076506704324
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065478348842873631}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 2}
+  m_Direction: 0

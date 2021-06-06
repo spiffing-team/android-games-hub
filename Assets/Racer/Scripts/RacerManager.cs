@@ -1,9 +1,13 @@
+using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Racer
 {
     public class RacerManager : GameBehaviour
     {
+        [SerializeField] private RectTransform endGameScreen;
+
         private ScreenOrientation previousScreenOrientation;
 
         void Start()
@@ -13,17 +17,33 @@ namespace Racer
             SetCorrectCameraSize();
         }
 
+        [Button]
+        public void StartGame()
+        {
+            SpeedController.Instance.StartGame();
+            ObstackleSpawner.Instance.StartSpawning();
+        }
+
         protected override void OnGoBack()
         {
             Screen.orientation = previousScreenOrientation;
             base.OnGoBack();
         }
 
-        protected override void Update()
+        public static void EndGame()
         {
-            base.Update();
+            Player.Instance.OnEnd();
+            ObstackleSpawner.Instance.OnEnd();
+            Road.Instance.OnEnd();
+            EndGameScreen.Instance.OnEnd();
+
             var points = PointsDatabase.Load(PointsDatabase.Field.Racer);
             PointsDatabase.Save(PointsDatabase.Field.Racer, points + 1);
+        }
+
+        public static void Restart()
+        {
+            SceneManager.RestartScene();
         }
 
         private void SetCorrectCameraSize()

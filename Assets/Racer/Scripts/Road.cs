@@ -4,9 +4,11 @@ namespace Racer
 {
     public class Road : Singleton<Road>
     {
+        [Range(0f, 1f)]
+        [SerializeField] private float modifier = 0.1f;
         private float speed;
         private float distance = 0f;
-        
+
         new Renderer renderer;
         MaterialPropertyBlock materialPropertyBlock;
         private static readonly int OffsetY = Shader.PropertyToID("_offsetY");
@@ -27,7 +29,12 @@ namespace Racer
 
         public void RecalculateSpeed(float newSpeed)
         {
-            speed = newSpeed * 0.1f;
+            speed = newSpeed * modifier;
+        }
+
+        public void OnEnd()
+        {
+            speed = 0;
         }
     }
 }

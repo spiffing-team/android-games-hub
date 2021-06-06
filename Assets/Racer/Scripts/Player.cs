@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Racer
@@ -6,26 +5,17 @@ namespace Racer
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : Singleton<Player>
     {
-        [SerializeField] private float speed = 5f;
+        private float speed = 5f;
         [SerializeField] private int inputMaxAngle = 45;
         [SerializeField] private int playerMaxAngle = 30;
         [SerializeField] private float sideSpeed = 5f;
         [SerializeField] private float roadWidth = 4f;
 
-        public float Speed
-        {
-            get => speed;
-            private set
-            {
-                speed = value;
-                Road.Instance.RecalculateSpeed(speed);
-            }
-        }
-
         private new Transform transform;
         private Vector3 rotation;
         private float position;
-        private bool useGyro = true;
+        [SerializeField] private bool useGyro = true;
+        private bool moving = true;
 
         private void Start()
         {
@@ -33,22 +23,28 @@ namespace Racer
             Input.gyro.enabled = true;
             rotation = transform.rotation.eulerAngles;
             position = transform.position.x;
-            Speed = speed;
         }
 
         private void Update()
         {
-            Speed = speed;
+            if (!moving) return;
+
             if (useGyro)
             {
                 float tilt = GetGyroTilt();
-            
+
                 rotation.z = -tilt * Mathf.PI * (playerMaxAngle / 180f);
                 transform.rotation = Quaternion.Euler(rotation);
-            
+
                 position = Mathf.Clamp(position + tilt * sideSpeed * Time.deltaTime, -roadWidth, roadWidth);
             }
-            
+            else
+            {
+                float input = Input.GetAxis("Horizontal");
+
+                position = Mathf.Clamp(position + input * sideSpeed * Time.deltaTime, -roadWidth, roadWidth);
+            }
+
             transform.position = new Vector3(position, 0);
         }
 
@@ -57,17 +53,26 @@ namespace Racer
             return Mathf.Clamp(Input.gyro.gravity.x * (90f / inputMaxAngle), -1, 1);
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            Input.gyro.enabled = false;
+            RacerManager.EndGame();
         }
 
-        [Button]
-        public void ChangeSpeed(float amount)
+        public void ChangeSpeed(float amount, bool affectCamera = true)
         {
-            speed += amount;
-            Road.Instance.RecalculateSpeed(speed);
-            PlayerCamera.Instance.SimulateSpeed(amount);
+            float dif = amount - speed;
+            speed = amount;
+            if (affectCamera)
+                PlayerCamera.Instance.SimulateSpeed(dif);
+        }
+
+        public void OnEnd()
+        {
+            moving = false;
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            Vector2 velocity = transform.up * speed;
+            rb.velocity = velocity;
         }
     }
 }
