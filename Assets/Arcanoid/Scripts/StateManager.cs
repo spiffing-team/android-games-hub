@@ -7,12 +7,15 @@ public class StateManager : MonoBehaviour
 {
     [SerializeField] private IntroManager _introManager;
     [SerializeField] private MainUIManager _mainUiManager;
+    [SerializeField] private GameplayManager Gameplay;
+    [SerializeField] private GameObject GameOver;
     
     
     void Awake()
     {
         _introManager.OnEnd += HideIntro;
-      //  ShowIntro();
+        _mainUiManager.OnEnd += GameStart;
+        ShowIntro();
     }
 
     #region Intro
@@ -41,6 +44,11 @@ public class StateManager : MonoBehaviour
 
     #region Gameplay
 
+    private void  GameStart()
+    {
+        Gameplay.StartGameplay();
+    }
+    
     
 
     #endregion

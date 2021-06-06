@@ -8,10 +8,12 @@ public class PaddleController : MonoBehaviour
 {
     // Start is called before the first frame update
     public int player=0;
+    private Camera _camera;
 
     void Start()
     {
-        
+        _camera =   Camera.main;
+
     }
 
     // Update is called once per frame
@@ -27,7 +29,7 @@ public class PaddleController : MonoBehaviour
         {
             if (Input.touchCount > 0 || Input.GetMouseButton(0))
             {
-                var pos = Camera.current.ScreenToWorldPoint(Input.mousePosition).x;;
+                var pos = _camera.ScreenToWorldPoint(Input.mousePosition).x;;
                 Debug.Log("MYSZKa");
                 //Touch touch = Input.GetTouch(0);
             

@@ -24,7 +24,7 @@ public class Block : MonoBehaviour
                 break;
             case 1 :
                 _blockType = BlockType.HalfCollision;
-
+                GetComponent<BoxCollider>().isTrigger = true;
                 break;
             case 2 :
                 _blockType = BlockType.PointTop;
@@ -56,9 +56,12 @@ public class Block : MonoBehaviour
 
                     break;
                 case  BlockType.PointTop :
+                    GameplayManager.instance.AddScore(true);
 
                     break;
                 case BlockType.PointDown :
+                    GameplayManager.instance.AddScore(false);
+
                     break;
                 case BlockType.Normal :
                     break;
@@ -71,5 +74,20 @@ public class Block : MonoBehaviour
             //BlockGenerator.instance.RemoveBlockFromActive();
         }
         
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+
+        if (other.transform.CompareTag("Ball"))
+        {
+            if (_blockType == BlockType.HalfCollision)
+            {
+                GetComponent<BoxCollider>().isTrigger = false;
+                _blockType = BlockType.Normal;
+                transform.GetComponent<MeshRenderer>().material = materialType[4];
+
+            }
+        }
     }
 }

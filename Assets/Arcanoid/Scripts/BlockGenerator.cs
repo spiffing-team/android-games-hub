@@ -39,7 +39,7 @@ public class BlockGenerator : MonoBehaviour
             {
                var element =  Instantiate( block, position, Quaternion.identity, transform);
                position += Vector3.right *0.8f;
-               element.SetType(Random.Range(0,1));
+               element.SetType(Random.Range(0,4));
                
                
                grid.Add(element);
