@@ -115,6 +115,7 @@ MonoBehaviour:
   clickAnimationPrefab: {fileID: 4988735046735192681, guid: 0e38f4d1f913c40399d38639857601bd, type: 3}
   StandardMaterial: {fileID: 2100000, guid: 9d84ed3aedbf2bd41b71c4914db38938, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 05eaef4c1233c82e19984fcc8474fbf8, type: 2}
+  BonusMaterial: {fileID: 2100000, guid: 3348b174374e8004d92394e23e1358f7, type: 2}
 --- !u!1 &8606002641800006926
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class Nonoblock : MonoBehaviour
 
     public Material StandardMaterial;
     public Material SelectedMaterial;
+    public Material BonusMaterial;
 
     MeshRenderer meshRenderer;
 
@@ -52,7 +53,7 @@ public class Nonoblock : MonoBehaviour
         this.changeMaterial(this.state ? this.SelectedMaterial : this.StandardMaterial);
     }
 
-    public void AnimateClick(Vector3? scale = null)
+    public void AnimateClick(Vector3? scale = null, bool colour = false)
     {
         if (scale == null)
         {
@@ -65,11 +66,21 @@ public class Nonoblock : MonoBehaviour
         );
         obj.transform.localScale = (Vector3)scale;
 
+        if (colour)
+        {
+            var o = obj.transform.GetChild(0);
+            foreach (var c in o.GetComponentsInChildren<MeshRenderer>())
+            {
+                c.material = this.BonusMaterial;
+            }
+        }
+
         var animator = obj.GetComponent<Animator>();
         animator.Play("ClickAnimation");
     }
 
-    public void SetCubeSize(float scale) {
+    public void SetCubeSize(float scale)
+    {
         this.cube.transform.localScale = Vector3.one * scale;
     }
 }

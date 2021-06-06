@@ -237,6 +237,9 @@ MonoBehaviour:
   TilesCountTextPrefab: {fileID: 7563369588299401967, guid: 7c30a785a5d16c523bf58d0e5fefa734, type: 3}
   EndGameTextPrefab: {fileID: 7563369588299401967, guid: 7c30a785a5d16c523bf58d0e5fefa734, type: 3}
   EndGameImage: {fileID: 1355561439}
+  HintIfLessThan: 3
+  ScorePerRound: 100
+  BonusPoints: 20
 --- !u!1 &526920256
 GameObject:
   m_ObjectHideFlags: 0

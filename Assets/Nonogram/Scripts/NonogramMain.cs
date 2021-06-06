@@ -11,6 +11,10 @@ public class NonogramMain : GameBehaviour
     public GameObject EndGameTextPrefab;
     public GameObject EndGameImage;
 
+    public int HintIfLessThan;
+    public int ScorePerRound;
+    public int BonusPoints;
+
     private TextAsset[] imageMaps;
     private Sprite[] imageMapsImgs;
     private int chosenImageMap;
@@ -25,12 +29,13 @@ public class NonogramMain : GameBehaviour
 
     private bool[,] selectedImageMap;
     private bool[,] selectedImageMapOriginal;
+    private (int, int) bonusPointsTile;
 
     private List<GameObject> textObjects = new List<GameObject>();
     private List<GameObject> tiles = new List<GameObject>();
 
-    private int score = 0;
     private bool alreadyWon = false;
+    private bool bonusPointsAcquired = false;
 
     // Start is called before the first frame update
     void Start()
@@ -280,10 +285,8 @@ public class NonogramMain : GameBehaviour
         this.selectedImageMap[y, x] = !this.selectedImageMap[y, x];
         cube.ToggleSelected();
 
-        cube.AnimateClick(Vector3.one * this.canvasSize * 0.08f);
-
         var scale = 1f;
-        if (this.cellsLeft() < 3)
+        if (this.cellsLeft() < this.HintIfLessThan)
         {
             scale = 0.9f;
         }
@@ -295,6 +298,15 @@ public class NonogramMain : GameBehaviour
                 t.SetCubeSize(scale);
             }
         }
+
+        var colour = false;
+        if (x == this.bonusPointsTile.Item1 && y == this.bonusPointsTile.Item2)
+        {
+            this.bonusPointsAcquired = true;
+            colour = true;
+        }
+
+        cube.AnimateClick(Vector3.one * this.canvasSize * 0.08f, colour);
 
         if (this.checkIfWon() && !this.alreadyWon)
         {
@@ -336,15 +348,23 @@ public class NonogramMain : GameBehaviour
             new Vector3(0, 0, -3),
             Quaternion.identity
         );
-        this.score += 100;
+        var score = this.ScorePerRound;
 
         // display the score
         var text = textObj.GetComponentInChildren<TilesCountText>();
-        text.SetText("You’ve won\nwith a score of:\n" + this.score);
+        var t = "You’ve won\nwith a score of:\n";
+        if (this.bonusPointsAcquired)
+        {
+            score += this.BonusPoints;
+            t += score + "\n(You’ve found\n" + this.BonusPoints + " bonus points!)";
+        } else {
+            t += score;
+        }
+        text.SetText(t);
         text.SetSize(this.canvasSize * 0.5f);
 
         // save the score
-        PointsDatabase.SaveAdditively(PointsDatabase.Field.Nonogram, this.score);
+        PointsDatabase.SaveAdditively(PointsDatabase.Field.Nonogram, score);
 
         // play the ending animation
         var endAnimation = this.EndGameImage.GetComponent<Animator>();
@@ -356,6 +376,7 @@ public class NonogramMain : GameBehaviour
     {
         bool[,] output = null;
         TextAsset asset = null;
+        var size = 0;
 
         if (mapName == null)
         {
@@ -372,7 +393,7 @@ public class NonogramMain : GameBehaviour
             var raw = asset.text;
 
             var rows = raw.Split('\n');
-            var size = rows.Length - 1; // do not include the last empty line
+            size = rows.Length - 1; // do not include the last empty line
             output = new bool[size, size];
             for (int y = 0; y < size; y++)
             {
@@ -391,5 +412,15 @@ public class NonogramMain : GameBehaviour
 
         var sprite = this.EndGameImage.GetComponent<SpriteRenderer>();
         sprite.sprite = this.imageMapsImgs[this.chosenImageMap];
+
+        // choose a tile that grants bonus points
+        this.bonusPointsTile = (Random.Range(0, size), Random.Range(0, size));
+        var xt = this.bonusPointsTile.Item1;
+        var yt = this.bonusPointsTile.Item2;
+        // nullify the tile if it is outside the image
+        if (!this.selectedImageMapOriginal[yt, xt])
+        {
+            this.bonusPointsTile = (-1, -1);
+        }
     }
 }
