@@ -98,7 +98,7 @@ namespace Racer
             obstacle.transform.SetParent(obstaclePoolTransform);
         }
 
-        private void CreateObstackle(int column)
+        private void CreateObstacle(int column)
         {
             Obstacle obstacle;
             if (obstaclePool.Count > 0)
@@ -112,9 +112,9 @@ namespace Racer
             }
             activeObstacles.Add(obstacle);
             obstacle.gameObject.SetActive(true);
-            var obstackleTransform = obstacle.transform;
-            obstackleTransform.position = new Vector3(columnPositionsX[column], nextObstackleHeight);
-            obstackleTransform.parent = transform;
+            var obstacleTransform = obstacle.transform;
+            obstacleTransform.position = new Vector3(columnPositionsX[column], nextObstackleHeight);
+            obstacleTransform.parent = transform;
             obstacle.SetSpeed(speed);
         }
 
@@ -130,7 +130,6 @@ namespace Racer
 
         public void OnEnd()
         {
-            speed = 2f;
             foreach (Obstacle obstacle in activeObstacles)
             {
                 obstacle.OnEnd(speed);
@@ -161,7 +160,7 @@ namespace Racer
             {
                 int column = availableColumns[Random.Range(0, availableColumns.Count)];
                 availableColumns.Remove(column);
-                CreateObstackle(column);
+                CreateObstacle(column);
                 freeColumns[column] = false;
             }
 

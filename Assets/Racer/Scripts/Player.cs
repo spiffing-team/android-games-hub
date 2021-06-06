@@ -29,28 +29,21 @@ namespace Racer
         {
             if (!moving) return;
 
-            if (useGyro)
-            {
-                float tilt = GetGyroTilt();
+            float tilt = GetGyroTilt();
 
-                rotation.z = -tilt * Mathf.PI * (playerMaxAngle / 180f);
-                transform.rotation = Quaternion.Euler(rotation);
+            rotation.z = -tilt * playerMaxAngle;
+            transform.rotation = Quaternion.Euler(rotation);
 
-                position = Mathf.Clamp(position + tilt * sideSpeed * Time.deltaTime, -roadWidth, roadWidth);
-            }
-            else
-            {
-                float input = Input.GetAxis("Horizontal");
-
-                position = Mathf.Clamp(position + input * sideSpeed * Time.deltaTime, -roadWidth, roadWidth);
-            }
+            position = Mathf.Clamp(position + tilt * sideSpeed * Time.deltaTime, -roadWidth, roadWidth);
 
             transform.position = new Vector3(position, 0);
         }
 
         private float GetGyroTilt()
         {
-            return Mathf.Clamp(Input.gyro.gravity.x * (90f / inputMaxAngle), -1, 1);
+            return useGyro ?
+                Mathf.Clamp(Input.gyro.gravity.x * (90f / inputMaxAngle), -1, 1) :
+                Input.GetAxis("Horizontal");
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -71,7 +64,7 @@ namespace Racer
             moving = false;
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
-            Vector2 velocity = transform.up * speed;
+            Vector2 velocity = ((Vector2)transform.up + (Vector2.right * GetGyroTilt())) * speed;
             rb.velocity = velocity;
         }
     }
