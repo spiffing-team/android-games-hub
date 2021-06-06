@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -10,5 +11,6 @@ public class GameOverScreen : MonoBehaviour
     {
         gameObject.SetActive(true);
         finalScore.text = scoreTop + ":" + scoreBot;
+
     }
 }

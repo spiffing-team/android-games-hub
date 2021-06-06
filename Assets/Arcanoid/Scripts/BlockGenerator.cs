@@ -32,16 +32,16 @@ public class BlockGenerator : MonoBehaviour
 
         var startpos = transform.position;
         var position = transform.position;
-        
-        for (int i = 0; i < 7; i++)
+
+        for (int i = 0; i < 14; i++)
         {
             for (int j = 0; j < 5; j++)
             {
                var element =  Instantiate( block, position, Quaternion.identity, transform);
                position += Vector3.right *0.8f;
                element.SetType(Random.Range(0,4));
-               
-               
+
+
                grid.Add(element);
                activeGrid.Add(element);
             }
@@ -69,7 +69,7 @@ public class BlockGenerator : MonoBehaviour
        activeGrid.Remove(block);
        block.gameObject.SetActive(false);
     }
-    
+
     public void RemoveBlockFromActive()
     {
         Block x = activeGrid[Random.Range(0, activeGrid.Count)];

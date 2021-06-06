@@ -7,7 +7,9 @@ using UnityEngine;
 public class PaddleController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int player=0;
+    public Transform firstPlayer;
+
+    public Transform secondPlayer;
     private Camera _camera;
 
     void Start()
@@ -25,35 +27,38 @@ public class PaddleController : MonoBehaviour
 
     private void PaddleMovement()
     {
-        if (player == 0)
-        {
-            if (Input.touchCount > 0 || Input.GetMouseButton(0))
-            {
-                var pos = _camera.ScreenToWorldPoint(Input.mousePosition).x;;
-                Debug.Log("MYSZKa");
-                //Touch touch = Input.GetTouch(0);
-            
-                transform.DOMoveX(pos, 0.1f);
 
-                //transform.DOMoveX(touch.position.x, 0.1f);
+        foreach (var touch in Input.touches)
+        {
+            var pos = touch.position;
+
+            if (pos.y>0)
+            {
+                firstPlayer.DOMoveX(pos.x, 0.1f);
+            }
+            else
+            {
+                secondPlayer.DOMoveX(pos.x, 0.1f);
             }
         }
-        else
-        {
-            if (Input.touchCount > 0 || Input.GetMouseButton(1))
-            {
-            
-                var pos = Camera.current.ScreenToWorldPoint(Input.mousePosition).x;;
-                Debug.Log("MYSZKa");
-                //Touch touch = Input.GetTouch(0);
-            
-                transform.DOMoveX(pos, 0.1f);
 
-                //transform.DOMoveX(touch.position.x, 0.1f);
+    #if UNITY_EDITOR
+            if (Input.GetMouseButton(0))
+            {
+                var pos = _camera.ScreenToWorldPoint(Input.mousePosition);;
+
+
+                if (pos.y>0)
+                {
+                    firstPlayer.DOMoveX(pos.x, 0.1f);
+                }
+                else
+                {
+                    secondPlayer.DOMoveX(pos.x, 0.1f);
+                }
             }
-        }
-       
-      
+
+    #endif
     }
     private void OnCollisionEnter(Collision other)
     {
@@ -71,14 +76,14 @@ public class PaddleController : MonoBehaviour
             }
 
             moveDir *= -1;
-        
+
             other.transform.GetComponent<Ball>().move = moveDir;
 
             BlockGenerator.instance.ActivateBlock();
             BlockGenerator.instance.ActivateBlock();
 
         }
-       
-        
+
+
     }
 }
